@@ -1,10 +1,11 @@
 /*
-Package combinations is a Go implementation of Phillip J. Chase's
-twiddle algorithm, based on Matthew Belmonte's C version
-(http://www.netlib.no/netlib/toms/382).  It was written by Scott Pakin
-<scott-comb@pakin.org>.
+Package choose returns selections of M elements from slices of length
+N.  It was written by Scott Pakin <scott-sel@pakin.org>.  The code is
+largely a Go implementation of Phillip J. Chase's twiddle algorithm,
+based on Matthew Belmonte's C version
+(http://www.netlib.no/netlib/toms/382).
 */
-package combinations
+package choose
 
 import (
 	"fmt"

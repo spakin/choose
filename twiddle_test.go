@@ -1,9 +1,9 @@
 /* This file tests our ability to produce combinations. */
 
-package combinations_test
+package choose_test
 
 import (
-	"github.com/spakin/combinations"
+	"github.com/spakin/choose"
 	"testing"
 )
 
@@ -21,7 +21,7 @@ func TestStrings4C1(t *testing.T) {
 	// Generate and store all combinations.
 	a := []string{"foo", "bar", "baz", "quux"}
 	seen := make(map[string]struct{}, len(a))
-	for s := range combinations.Strings(a, 1) {
+	for s := range choose.Strings(a, 1) {
 		if len(s) != 1 {
 			t.Fatalf("Expected 1 string per selection but received %d (%v)", len(s), s)
 		}
