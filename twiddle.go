@@ -56,6 +56,51 @@ func newState(a interface{}, m int) *state {
 	}
 }
 
+// nextCombination performs Chase's twiddle operation to advance to the next
+// combination.  It returns false when there are no more combinations.
+func (s *state) nextCombination() bool {
+	var i, j, k int
+	for j = 1; s.P[j] <= 0; j++ {
+	}
+	if s.P[j-1] == 0 {
+		for i = j - 1; i != 1; i-- {
+			s.P[i] = -1
+		}
+		s.P[j] = 0
+		s.X = 0
+		s.Z = 0
+		s.P[1] = 1
+		s.Y = j - 1
+	} else {
+		if j > 1 {
+			s.P[j-1] = 0
+		}
+	}
+	for j++; s.P[j] > 0; j++ {
+	}
+	k = j - 1
+	for i = j; s.P[i] == 0; i++ {
+		s.P[i] = -1
+	}
+	if s.P[i] == -1 {
+		s.P[i] = s.P[k]
+		s.Z = s.P[k] - 1
+		s.X = i - 1
+		s.Y = k - 1
+		s.P[k] = -1
+	} else {
+		if i == s.P[0] {
+			return false
+		}
+		s.P[j] = s.P[i]
+		s.Z = s.P[i] - 1
+		s.P[i] = 0
+		s.X = j - 1
+		s.Y = i - 1
+	}
+	return true
+}
+
 // Strings returns all length-M combinations of a slice of strings.
 func Strings(a []string, m int) <-chan string {
 	ch := make(chan string, 100)
