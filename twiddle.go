@@ -114,7 +114,8 @@ func Strings(a []string, m int) <-chan []string {
 			cv := reflect.MakeSlice(at, m, m)
 			reflect.Copy(cv, st.C)
 			cv.Index(st.Z).Set(st.A.Index(st.X))
-			ch <- cv.Interface().([]string)
+			st.C = cv
+			ch <- st.C.Interface().([]string)
 		}
 		close(ch)
 	}()
