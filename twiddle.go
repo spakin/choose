@@ -17,8 +17,8 @@ type state struct {
 	Y int
 	Z int
 	P []int
-	A interface{} // Original data (slice of length N)
-	C interface{} // Current combination (slice of length M)
+	A reflect.Value // Original data (slice of length N)
+	C reflect.Value // Current combination (slice of length M)
 }
 
 // newState initializes and returns new twiddle state.
@@ -43,16 +43,16 @@ func newState(a interface{}, m int) *state {
 	}
 
 	// Initialize the c slice.
-	c := reflect.MakeSlice(at, m, m)
+	cv := reflect.MakeSlice(at, m, m)
 	for i := 0; i < m; i++ {
-		c.Index(i).Set(av.Index(n - m + i))
+		cv.Index(i).Set(av.Index(n - m + i))
 	}
 
 	// Create new state and return it.
 	return &state{
 		P: p,
-		A: a,
-		C: c,
+		A: av,
+		C: cv,
 	}
 }
 
@@ -101,8 +101,16 @@ func (s *state) nextCombination() bool {
 	return true
 }
 
-// Strings returns all length-M combinations of a slice of strings.
-func Strings(a []string, m int) <-chan string {
-	ch := make(chan string, 100)
+// Strings returns all length-M combinations of a slice of strings one at a
+// time on a channel.
+func Strings(a []string, m int) <-chan []string {
+	ch := make(chan []string, 100)
+	st := newState(a, m)
+	go func() {
+		for st.nextCombination() {
+			st.C.Index(st.Z).Set(st.A.Index(st.X))
+			ch <- st.C.Interface().([]string)
+		}
+	}()
 	return ch
 }
