@@ -1,10 +1,15 @@
 /*
-combinations is a Go implementation of Phillip J. Chase's twiddle
-algorithm, based on Matthew Belmonte's C version
+Package combinations is a Go implementation of Phillip J. Chase's
+twiddle algorithm, based on Matthew Belmonte's C version
 (http://www.netlib.no/netlib/toms/382).  It was written by Scott Pakin
 <scott-comb@pakin.org>.
 */
 package combinations
+
+import (
+	"fmt"
+	"reflect"
+)
 
 // state encapsulates the twiddle state.
 type state struct {
@@ -12,14 +17,21 @@ type state struct {
 	Y int
 	Z int
 	P []int
-	A []string // Original data (length N)
-	C []string // Current combination (length M)
+	A interface{} // Original data (slice of length N)
+	C interface{} // Current combination (slice of length M)
 }
 
 // newState initializes and returns new twiddle state.
-func newState(a []string, m int) *state {
-	// Initialize the p array.
-	n := len(a)
+func newState(a interface{}, m int) *state {
+	// Determine properties of a.
+	av := reflect.ValueOf(a)
+	at := reflect.TypeOf(a)
+	if av.Kind() != reflect.Slice {
+		panic(fmt.Sprintf("expected slice but received %s", av.Kind()))
+	}
+	n := av.Len()
+
+	// Initialize the p slice.
 	p := make([]int, n+2)
 	p[0] = n + 1
 	for i := 0; i < m; i++ {
@@ -30,10 +42,10 @@ func newState(a []string, m int) *state {
 		p[1] = 1
 	}
 
-	// Initialize the c array.
-	c := make([]string, m)
-	for i := range c {
-		c[i] = a[n-m+i]
+	// Initialize the c slice.
+	c := reflect.MakeSlice(at, m, m)
+	for i := 0; i < m; i++ {
+		c.Index(i).Set(av.Index(n - m + i))
 	}
 
 	// Create new state and return it.
