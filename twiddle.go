@@ -35,7 +35,7 @@ func newState(a interface{}, m int) *state {
 	p := make([]int, n+2)
 	p[0] = n + 1
 	for i := 0; i < m; i++ {
-		p[n-m+i+1] = i
+		p[n-m+i+1] = i + 1
 	}
 	p[n+1] = -2
 	if m == 0 {
@@ -71,10 +71,11 @@ func (s *state) nextCombination() bool {
 		s.Z = 0
 		s.P[1] = 1
 		s.Y = j - 1
-	} else {
-		if j > 1 {
-			s.P[j-1] = 0
-		}
+		return true
+	}
+
+	if j > 1 {
+		s.P[j-1] = 0
 	}
 	for j++; s.P[j] > 0; j++ {
 	}
@@ -106,11 +107,16 @@ func (s *state) nextCombination() bool {
 func Strings(a []string, m int) <-chan []string {
 	ch := make(chan []string, 100)
 	st := newState(a, m)
+	at := reflect.TypeOf(a)
 	go func() {
+		ch <- st.C.Interface().([]string)
 		for st.nextCombination() {
-			st.C.Index(st.Z).Set(st.A.Index(st.X))
-			ch <- st.C.Interface().([]string)
+			cv := reflect.MakeSlice(at, m, m)
+			reflect.Copy(cv, st.C)
+			cv.Index(st.Z).Set(st.A.Index(st.X))
+			ch <- cv.Interface().([]string)
 		}
+		close(ch)
 	}()
 	return ch
 }
