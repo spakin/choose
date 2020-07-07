@@ -1,3 +1,8 @@
+############################################
+# Run continuous integration of the choose #
+# package on Travis CI's intrastructure    #
+############################################
+
 sudo: false
 
 language: go
