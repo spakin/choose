@@ -93,7 +93,7 @@ func ExampleSlice() {
 	}
 
 	// Select, store, then sort pairs of items.
-	pairs := make([]MenuItem, 0, choose.Choose(len(menu), 2))
+	pairs := make([]MenuItem, 0, choose.NumChoices(len(menu), 2))
 	for p := range choose.Slice(menu, 2) {
 		mi := p.([]MenuItem)
 		combo := MenuItem{

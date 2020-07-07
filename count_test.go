@@ -28,7 +28,7 @@ func TestChoose(t *testing.T) {
 	}
 	for _, good := range binom {
 		n, m, correct := good[0], good[1], good[2]
-		bc := choose.Choose(n, m)
+		bc := choose.NumChoices(n, m)
 		if bc != correct {
 			t.Fatalf("Expected %d choose %d = %d but computed %d",
 				n, m, correct, bc)

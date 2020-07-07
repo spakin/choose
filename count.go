@@ -5,9 +5,9 @@ actually returning them.
 
 package choose
 
-// Choose returns the number of ways to select M out of N items (i.e., the
+// NumChoices returns the number of ways to select M out of N items (i.e., the
 // binomial coefficient "N choose M").
-func Choose(n, m int) int {
+func NumChoices(n, m int) int {
 	if m > n {
 		return 0 // Bad input
 	}
