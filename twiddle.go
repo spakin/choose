@@ -1,17 +1,13 @@
 /*
-Package choose returns selections of M elements from slices of length
-N.  It was written by Scott Pakin <scott-sel@pakin.org>.  The code is
-largely a Go implementation of Phillip J. Chase's twiddle algorithm,
-based on Matthew Belmonte's C version
-(http://www.netlib.no/netlib/toms/382).
+Package choose returns all M-element subsets of an N-element set of various
+types.
 */
 package choose
 
 //go:generate go run gen-choose.go string int float64
 
 // A Container behaves like a slice.  It can be created; its length can be
-// queried; it is indexed by an integer; and its elements can be read and
-// written.
+// queried; and its elements, indexed by an integer, can be read and written.
 type Container interface {
 	New(n int) Container      // Create a new object of length n.
 	Len() int                 // Return the length of an object.

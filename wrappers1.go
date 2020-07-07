@@ -79,7 +79,7 @@ func ContainerElts(a Container, m int) <-chan Container {
 	return ch
 }
 
-// Uint64Bits returns all uint64 values with M of the first N bits set to 1.
+// Uint64Bits returns all uint64 values with M of the lower N bits set to 1.
 func Uint64Bits(n, m int) <-chan uint64 {
 	ch := make(chan uint64, 100)
 	if n < 0 || n > 64 {
