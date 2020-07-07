@@ -12,6 +12,8 @@ import (
 	"reflect"
 )
 
+//go:generate go run gen-choose.go string int float64
+
 // state encapsulates the twiddle state.
 type state struct {
 	X int
@@ -101,24 +103,4 @@ func (s *state) nextCombination() bool {
 		s.Y = i - 1
 	}
 	return true
-}
-
-// Strings returns all length-M combinations of a slice of strings one at a
-// time on a channel.
-func Strings(a []string, m int) <-chan []string {
-	ch := make(chan []string, 100)
-	st := newState(a, m)
-	at := reflect.TypeOf(a)
-	go func() {
-		ch <- st.C.Interface().([]string)
-		for st.nextCombination() {
-			cv := reflect.MakeSlice(at, m, m)
-			reflect.Copy(cv, st.C)
-			cv.Index(st.Z).Set(st.A.Index(st.X))
-			st.C = cv
-			ch <- st.C.Interface().([]string)
-		}
-		close(ch)
-	}()
-	return ch
 }
