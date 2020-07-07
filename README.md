@@ -22,7 +22,7 @@ will install the package.
 Documentation
 -------------
 
-See the [`choose` API reference](https://godoc.org/github.com/spakin/choose) for details, but the basic usage model is to invoke a function that accepts a slice and returns a channel, then iterate over that channel's contents, each of which is a slice of the same type as the input.
+See the [`choose` API reference](https://pkg.go.dev/github.com/spakin/choose?tab=doc) for details, but the basic usage model is to invoke a function that accepts a slice and returns a channel, then iterate over that channel's contents, each of which is a slice of the same type as the input.
 
 Author
 ------
