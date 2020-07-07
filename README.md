@@ -1,4 +1,4 @@
-Choose
+choose
 ======
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/spakin/choose)](https://goreportcard.com/report/github.com/spakin/choose)
