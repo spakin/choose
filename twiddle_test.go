@@ -85,7 +85,7 @@ func TestInts10C1(t *testing.T) {
 	}
 	for _, s := range a {
 		if _, ok := seen[s]; !ok {
-			t.Fatalf("Element %q does not appear in %v", s, seen)
+			t.Fatalf("Element %d does not appear in %v", s, seen)
 		}
 	}
 }
@@ -99,6 +99,44 @@ func TestInts5C3(t *testing.T) {
 			t.Fatalf("Expected 3 ints per selection but received %d (%v)", len(s), s)
 		}
 		sum := s[0] + s[1] + s[2]
+		if sum < 1 || sum > 28 || bits.OnesCount(uint(sum)) != 3 {
+			t.Fatalf("Encountered invalid selection %v", s)
+		}
+	}
+}
+
+// TestFloat64s10C1 tests choosing one of ten float64s.
+func TestFloat64s10C1(t *testing.T) {
+	// Generate and store all combinations.
+	a := []float64{53.1, 59.2, 61.3, 67.4, 71.5, 73.6, 79.7, 83.8, 89.9, 97.0}
+	seen := make(map[float64]struct{}, len(a))
+	for s := range choose.Float64s(a, 1) {
+		if len(s) != 1 {
+			t.Fatalf("Expected 1 float64 per selection but received %d (%v)", len(s), s)
+		}
+		seen[s[0]] = struct{}{}
+	}
+
+	// Ensure we received the correct number and value of items.
+	if len(seen) != 10 {
+		t.Fatalf("Expected 10 unique float64s but received %d (%v)", len(seen), seen)
+	}
+	for _, s := range a {
+		if _, ok := seen[s]; !ok {
+			t.Fatalf("Element %.3g does not appear in %v", s, seen)
+		}
+	}
+}
+
+// TestFloat64s5C3 tests choosing three of five float64s.
+func TestFloat64s5C3(t *testing.T) {
+	// Consider the first five powers of 2.
+	a := []float64{1.0, 2.0, 4.0, 8.0, 16.0}
+	for s := range choose.Float64s(a, 3) {
+		if len(s) != 3 {
+			t.Fatalf("Expected 3 float64s per selection but received %d (%v)", len(s), s)
+		}
+		sum := int(s[0] + s[1] + s[2])
 		if sum < 1 || sum > 28 || bits.OnesCount(uint(sum)) != 3 {
 			t.Fatalf("Encountered invalid selection %v", s)
 		}
