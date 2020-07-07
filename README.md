@@ -1,6 +1,7 @@
 choose
 ======
 
+[![Build Status](https://travis-ci.org/spakin/choose.svg?branch=master)](https://travis-ci.org/spakin/choose)
 [![Go Report Card](https://goreportcard.com/badge/github.com/spakin/choose)](https://goreportcard.com/report/github.com/spakin/choose)
 [![GoDoc](https://godoc.org/github.com/spakin/choose?status.svg)](https://godoc.org/github.com/spakin/choose)
 
