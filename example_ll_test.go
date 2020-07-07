@@ -51,7 +51,7 @@ func (cl CompList) Set(i int, v interface{}) {
 // Demonstrate taking subsets of a non-slice container.  Here, we use a linked
 // list, which is horribly inefficient for random access but suffices for
 // pedagogical purposes.
-func Example() {
+func ExampleGeneric() {
 	// Store all sixth roots of unity in a CompList.
 	const n = 6
 	rou := CompList{}.New(n)
@@ -68,7 +68,6 @@ func Example() {
 		r2 := r.Get(2).(complex128)
 		fmt.Printf("%7.4f + %7.4f + %7.4f = %7.4f\n", r0, r1, r2, r0+r1+r2)
 	}
-
 	// Output:
 	// (-1.0000+0.0000i) + (-0.5000-0.8660i) + ( 0.5000-0.8660i) = (-1.0000-1.7321i)
 	// ( 1.0000+0.0000i) + (-0.5000-0.8660i) + ( 0.5000-0.8660i) = ( 1.0000-1.7321i)
