@@ -6,11 +6,18 @@ generated code.
 
 package choose
 
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 // Slice returns all length-M combinations of an arbitrary slice one at a
 // time on a channel.
 func Slice(a interface{}, m int) <-chan interface{} {
+	av := reflect.ValueOf(a)
+	if av.Kind() != reflect.Slice {
+		panic(fmt.Sprintf("expected slice but received %s", av.Kind()))
+	}
 	ch := make(chan interface{}, 100)
 	st := newState(a, m)
 	at := reflect.TypeOf(a)

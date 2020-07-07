@@ -8,7 +8,6 @@ based on Matthew Belmonte's C version
 package choose
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -29,9 +28,6 @@ func newState(a interface{}, m int) *state {
 	// Determine properties of a.
 	av := reflect.ValueOf(a)
 	at := reflect.TypeOf(a)
-	if av.Kind() != reflect.Slice {
-		panic(fmt.Sprintf("expected slice but received %s", av.Kind()))
-	}
 	n := av.Len()
 
 	// Initialize the p slice.
