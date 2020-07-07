@@ -1,4 +1,4 @@
-/* This file provides an example of choose.Generic. */
+/* This file provides an example of choose.ContainerElts. */
 
 package choose_test
 
@@ -51,7 +51,7 @@ func (cl CompList) Set(i int, v interface{}) {
 // Demonstrate taking subsets of a non-slice container.  Here, we use a linked
 // list, which is horribly inefficient for random access but suffices for
 // pedagogical purposes.
-func ExampleGeneric() {
+func ExampleContainerElts() {
 	// Store all sixth roots of unity in a CompList.
 	const n = 6
 	rou := CompList{}.New(n)
@@ -61,7 +61,7 @@ func ExampleGeneric() {
 	}
 
 	// Output all 3-element subsets.
-	for ri := range choose.Generic(rou, 3) {
+	for ri := range choose.ContainerElts(rou, 3) {
 		r := ri.(CompList)
 		r0 := r.Get(0).(complex128)
 		r1 := r.Get(1).(complex128)

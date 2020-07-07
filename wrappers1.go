@@ -46,9 +46,9 @@ func Slice(a interface{}, m int) <-chan interface{} {
 	return ch
 }
 
-// Generic returns all length-M combinations of an arbitrary Container one at a
-// time on a channel.
-func Generic(a Container, m int) <-chan Container {
+// ContainerElts returns all length-M combinations of the elements of an
+// arbitrary Container one at a time on a channel.
+func ContainerElts(a Container, m int) <-chan Container {
 	// Initialize our state.
 	ch := make(chan Container, 100)
 	n := a.Len()

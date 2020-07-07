@@ -232,7 +232,7 @@ func TestMyMap8C1(t *testing.T) {
 	}
 	sum := 0
 	tally := 0
-	for si := range choose.Generic(a, 1) {
+	for si := range choose.ContainerElts(a, 1) {
 		s := si.(MyMap)
 		if s.Len() != 1 {
 			t.Fatalf("Expected 1 item per selection but received %d (%v)", s.Len(), s)
