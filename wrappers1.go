@@ -14,21 +14,32 @@ import (
 // Slice returns all length-M combinations of an arbitrary slice one at a
 // time on a channel.
 func Slice(a interface{}, m int) <-chan interface{} {
+	// Initialize our state.
 	av := reflect.ValueOf(a)
 	if av.Kind() != reflect.Slice {
 		panic(fmt.Sprintf("expected slice but received %s", av.Kind()))
 	}
 	ch := make(chan interface{}, 100)
-	st := newState(a, m)
+	n := av.Len()
+	st := newState(n, m)
 	at := reflect.TypeOf(a)
+	cv := reflect.MakeSlice(at, m, m)
+	for i := 0; i < m; i++ {
+		cv.Index(i).Set(av.Index(n - m + i))
+	}
+
+	// Spawn a goroutine to write all combinations into the channel.  We
+	// always return a copy of the combination rather than the original
+	// because the combination itself is modified in place.
 	go func() {
-		ch <- st.C.Interface()
+		cvCopy := reflect.MakeSlice(at, m, m)
+		reflect.Copy(cvCopy, cv)
+		ch <- cvCopy.Interface()
 		for st.nextCombination() {
-			cv := reflect.MakeSlice(at, m, m)
-			reflect.Copy(cv, st.C)
-			cv.Index(st.Z).Set(st.A.Index(st.X))
-			st.C = cv
-			ch <- st.C.Interface()
+			cv.Index(st.Z).Set(av.Index(st.X))
+			cvCopy := reflect.MakeSlice(at, m, m)
+			reflect.Copy(cvCopy, cv)
+			ch <- cvCopy.Interface()
 		}
 		close(ch)
 	}()
@@ -43,8 +54,7 @@ func Uint64Bits(n, m int) <-chan uint64 {
 		close(ch)
 		return ch
 	}
-	a := make([]struct{}, n)
-	st := newState(a, m)
+	st := newState(n, m)
 	var bits uint64 // Packed array of bits
 	for i := n - m; i < n; i++ {
 		bits |= 1 << i

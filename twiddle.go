@@ -7,10 +7,6 @@ based on Matthew Belmonte's C version
 */
 package choose
 
-import (
-	"reflect"
-)
-
 //go:generate go run gen-choose.go string int float64
 
 // state encapsulates the twiddle state.
@@ -19,17 +15,12 @@ type state struct {
 	Y int
 	Z int
 	P []int
-	A reflect.Value // Original data (slice of length N)
-	C reflect.Value // Current combination (slice of length M)
 }
 
-// newState initializes and returns new twiddle state.
-func newState(a interface{}, m int) *state {
-	// Determine properties of a.
-	av := reflect.ValueOf(a)
-	at := reflect.TypeOf(a)
-	n := av.Len()
-
+// newState initializes and returns new twiddle state.  The caller is
+// responsible for properly initializing and maintaining the M-element array of
+// the current combination.
+func newState(n, m int) *state {
 	// Initialize the p slice.
 	p := make([]int, n+2)
 	p[0] = n + 1
@@ -41,18 +32,8 @@ func newState(a interface{}, m int) *state {
 		p[1] = 1
 	}
 
-	// Initialize the c slice.
-	cv := reflect.MakeSlice(at, m, m)
-	for i := 0; i < m; i++ {
-		cv.Index(i).Set(av.Index(n - m + i))
-	}
-
 	// Create new state and return it.
-	return &state{
-		P: p,
-		A: av,
-		C: cv,
-	}
+	return &state{P: p}
 }
 
 // nextCombination performs Chase's twiddle operation to advance to the next
