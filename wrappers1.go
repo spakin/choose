@@ -46,6 +46,39 @@ func Slice(a interface{}, m int) <-chan interface{} {
 	return ch
 }
 
+// Generic returns all length-M combinations of an arbitrary Container one at a
+// time on a channel.
+func Generic(a Container, m int) <-chan Container {
+	// Initialize our state.
+	ch := make(chan Container, 100)
+	n := a.Len()
+	st := newState(n, m)
+	c := a.New(m)
+	for i := 0; i < m; i++ {
+		c.Set(i, a.Get(n-m+i))
+	}
+	copyC := func() Container {
+		cCopy := c.New(m)
+		for i := 0; i < m; i++ {
+			cCopy.Set(i, c.Get(i))
+		}
+		return cCopy
+	}
+
+	// Spawn a goroutine to write all combinations into the channel.  We
+	// always return a copy of the combination rather than the original
+	// because the combination itself is modified in place.
+	go func() {
+		ch <- copyC()
+		for st.nextCombination() {
+			c.Set(st.Z, a.Get(st.X))
+			ch <- copyC()
+		}
+		close(ch)
+	}()
+	return ch
+}
+
 // Uint64Bits returns all uint64 values with M of the first N bits set to 1.
 func Uint64Bits(n, m int) <-chan uint64 {
 	ch := make(chan uint64, 100)

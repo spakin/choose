@@ -201,3 +201,53 @@ func TestSlice8C1(t *testing.T) {
 		t.Fatalf("Expected a sum of [252, 36] but received %v", sum)
 	}
 }
+
+// A MyMap is a map that implements the choose.Container interface.
+type MyMap map[int]int16
+
+// New creates a new MyMap.
+func (m MyMap) New(n int) choose.Container { return make(MyMap, n) }
+
+// Len returns the length of a MyMap.
+func (m MyMap) Len() int { return len(m) }
+
+// Get returns an item from a MyMap.
+func (m MyMap) Get(i int) interface{} { return m[i] }
+
+// Set assigns a value to an item in a MyMap.
+func (m MyMap) Set(i int, v interface{}) { m[i] = v.(int16) }
+
+// TestMyMap8C1 tests choosing one of eight MyMaps.
+func TestMyMap8C1(t *testing.T) {
+	// Iterate over 8 arbitrary map entries.
+	a := MyMap{
+		0: 1,
+		1: 2,
+		2: 3,
+		3: 5,
+		4: 9,
+		5: 32,
+		6: 56,
+		7: 144,
+	}
+	sum := 0
+	tally := 0
+	for si := range choose.Generic(a, 1) {
+		s := si.(MyMap)
+		if s.Len() != 1 {
+			t.Fatalf("Expected 1 item per selection but received %d (%v)", s.Len(), s)
+		}
+		for _, v := range s {
+			sum += int(v)
+		}
+		tally++
+	}
+
+	// Ensure we received the correct number and value of items.
+	if tally != 8 {
+		t.Fatalf("Expected 8 unique items but received %d", tally)
+	}
+	if sum != 252 {
+		t.Fatalf("Expected a sum of 252 but received %d", sum)
+	}
+}

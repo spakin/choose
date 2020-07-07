@@ -9,6 +9,16 @@ package choose
 
 //go:generate go run gen-choose.go string int float64
 
+// A Container behaves like a slice.  It can be created; its length can be
+// queried; it is indexed by an integer; and its elements can be read and
+// written.
+type Container interface {
+	New(n int) Container      // Create a new object of length n.
+	Len() int                 // Return the length of an object.
+	Get(i int) interface{}    // Return the element at a given index.
+	Set(i int, v interface{}) // Set the element at a given index.
+}
+
 // state encapsulates the twiddle state.
 type state struct {
 	X int
