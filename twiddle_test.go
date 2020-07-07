@@ -142,3 +142,22 @@ func TestFloat64s5C3(t *testing.T) {
 		}
 	}
 }
+
+// TestUint64Bits35C5 tests choose 5 of 35 bits in a Uint64.
+func TestUint64Bits35C5(t *testing.T) {
+	tally := 0
+	for s := range choose.Uint64Bits(35, 5) {
+		tally++
+		num1s := bits.OnesCount64(s)
+		if num1s != 5 {
+			t.Fatalf("Expected 5 bits to be set in %064b, not %d", s, num1s)
+		}
+		if s >= 1<<35 {
+			t.Fatalf("Value is out of range (%d > %d)", s, 1<<35)
+		}
+	}
+	exp := 324632
+	if tally != exp {
+		t.Fatalf("Expected %d choices but received %d", exp, tally)
+	}
+}
