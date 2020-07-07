@@ -161,3 +161,43 @@ func TestUint64Bits35C5(t *testing.T) {
 		t.Fatalf("Expected %d choices but received %d", exp, tally)
 	}
 }
+
+// TestSlice8C1 tests choosing one of eight structs.
+func TestSlice8C1(t *testing.T) {
+	// Define a type to use.
+	type Thing struct {
+		N uint8
+		C rune
+	}
+
+	// Iterate over 8 arbitrary things.
+	a := []Thing{
+		{1, 'A'},
+		{2, 'B'},
+		{3, 'C'},
+		{5, 'D'},
+		{9, 'E'},
+		{32, 'F'},
+		{56, 'G'},
+		{144, 'H'},
+	}
+	var sum [2]int
+	tally := 0
+	for si := range choose.Slice(a, 1) {
+		s := si.([]Thing)
+		if len(s) != 1 {
+			t.Fatalf("Expected 1 struct per selection but received %d (%v)", len(s), s)
+		}
+		sum[0] += int(s[0].N)
+		sum[1] += int(s[0].C - 'A' + 1)
+		tally++
+	}
+
+	// Ensure we received the correct number and value of items.
+	if tally != 8 {
+		t.Fatalf("Expected 8 unique structs but received %d", tally)
+	}
+	if sum[0] != 252 || sum[1] != 36 {
+		t.Fatalf("Expected a sum of [252, 36] but received %v", sum)
+	}
+}
