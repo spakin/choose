@@ -2,6 +2,7 @@ choose
 ======
 
 [![Build Status](https://travis-ci.org/spakin/choose.svg?branch=master)](https://travis-ci.org/spakin/choose)
+[![Go project version](https://badge.fury.io/go/github.com%2Fspakin%2Fchoose.svg)](https://badge.fury.io/go/github.com%2Fspakin%2Fchoose)
 [![Go Report Card](https://goreportcard.com/badge/github.com/spakin/choose)](https://goreportcard.com/report/github.com/spakin/choose)
 [![GoDoc](https://godoc.org/github.com/spakin/choose?status.svg)](https://godoc.org/github.com/spakin/choose)
 
